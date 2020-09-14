@@ -1,0 +1,34 @@
+version: '3.8'
+
+volumes:
+  pgdata:
+    name: pgdata-hasura
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=P@ssword
+      - POSTGRES_DB=test
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  hasura:
+    container_name: hasura
+    image: hasura/graphql-engine:v1.3.2
+    environment:
+      - HASURA_GRAPHQL_DATABASE_URL=postgres://postgres:P%40ssword@postgres:5432/test
+      - HASURA_GRAPHQL_ENABLE_CONSOLE=true
+      - HASURA_GRAPHQL_ENABLED_LOG_TYPES=startup, http-log, webhook-log, websocket-log, query-log
+#      - HASURA_GRAPHQL_JWT_SECRET={"jwk_url":"http://identityapi/.well-known/openid-configuration/jwks","audience":"hasura","claims_format":"stringified_json","claims_namespace_path":"$$.hasura","type":"RS256"}
+      - HASURA_GRAPHQL_ADMIN_SECRET=suzexagumociyemaxogimujufeqino0
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres

@@ -1,0 +1,19 @@
+version: '3.8'
+volumes:
+  mssqlsystem:
+    name: mssqlsystem
+  mssqluser:
+    name: mssqluser
+services:
+  mssql:
+    container_name: mssql
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+        - SA_PASSWORD=P@ssword
+        - ACCEPT_EULA=Y
+    restart: unless-stopped
+    ports:
+        - "1433:1433"
+    volumes:
+        - mssqlsystem:/var/opt/mssql
+        - mssqluser:/var/opt/sqlserver
