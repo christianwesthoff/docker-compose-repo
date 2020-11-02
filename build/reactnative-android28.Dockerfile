@@ -1,9 +1,6 @@
-FROM gradle:4.10.0-jdk8
+FROM gradle:5.5-jdk8
 
-# author
 MAINTAINER Christian Westhoff
-
-# extra metadata
 LABEL version="0.0.1"
 LABEL description="Docker image for react native with android 28"
 
@@ -30,11 +27,17 @@ RUN $ANDROID_HOME/tools/bin/sdkmanager "build-tools;${ANDROID_BUILD_TOOLS_VERSIO
     "platform-tools"
 
 # Install Build Essentials
-RUN apt-get update && apt-get install build-essential -y && apt-get install file -y && apt-get install apt-utils -y
-
 RUN apt-get update -yq \
-    && apt-get install curl gnupg -yq \
-    && curl -sL https://deb.nodesource.com/setup_14.x --silent | bash \
+    && apt-get install build-essential -yq \
+    && apt-get install file -yq \
+    && apt-get install apt-utils -yq
+
+# Install curl and gnupg
+RUN apt-get install curl gnupg -yq
+
+# Install nodejs
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash \
     && apt-get install nodejs -yq
 
+# Install yarn
 RUN npm install yarn -g --silent
